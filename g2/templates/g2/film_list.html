@@ -1,3 +1,8 @@
+{% extends "g2/header.html" %}
+
+{% block content %}
+
+
 <h1>Movies</h1>
 <ul>
   {% for am in all_movies %}
@@ -11,3 +16,5 @@
   <a href="{% url 'film_create' %}">add film</a>
 
 </ul>
+
+{% endblock %}

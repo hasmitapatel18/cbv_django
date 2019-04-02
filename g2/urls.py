@@ -4,6 +4,7 @@ from g2.views import *
 
 
 
+
 urlpatterns = [
     path('', FilmListView.as_view(), name='film_list'),
 
@@ -15,12 +16,7 @@ urlpatterns = [
 
     path('delete/<int:pk>', views.FilmDeleteView.as_view(), name='film_delete'),
 
-
-
-
-
-
-
+    path('register/', views.RegisterView.as_view(), name='register'),
 
 
 

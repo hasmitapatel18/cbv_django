@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 from .models import *
 
 from .forms import *
@@ -11,6 +13,11 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 
 from django.shortcuts import get_object_or_404
+
+from django.contrib.auth import login, logout, authenticate
+
+from django.contrib import messages
+
 
 
 
@@ -45,17 +52,20 @@ class FilmDetailView(FormMixin, DetailView):
         cc = Comment.objects.create( film_comment_id=self.kwargs['pk'], user=request.user, content=content)
         context = super(FilmDetailView, self).get_context_data(**kwargs)
         context['comment_list'] = Comment.objects.all().filter(film_comment=self.kwargs['pk'])
-
         return self.render_to_response(context=context)
 
+
     def commentdelete(self, request, **kwargs):
-        context['comment_list'] = Comment.objects.all().filter(film_comment=self.kwargs['pk'])
         self.object = self.get_object()
-        success_url = self.get_success_url()
-        if commentdelete.user==request.user:
-            context['cd'] = comment_list.delete()
-        # context = super(FilmDetailView, self).get_context_data(**kwargs)
-        # context['comment_list'] = Comment.objects.all().filter(film_comment=self.kwargs['pk'])
+        context['comment_list'] = Comment.objects.all().filter(film_comment=self.kwargs['pk'])
+        context['individual_comment']=comment_list.filter(comment_id=self.id)
+
+        # success_url = self.get_success_url()
+        if comment.user==request.user:
+            context['cd'] = individual_comment.delete()
+        context = super(FilmDetailView, self).get_context_data(**kwargs)
+        context['comment_list'] = Comment.objects.all().filter(film_comment=self.kwargs['pk'])
+
 
 
 
@@ -73,3 +83,13 @@ class FilmUpdateView(UpdateView):
 class FilmDeleteView(DeleteView):
     model= Film
     success_url = reverse_lazy('film_list')
+
+
+
+
+
+
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'g2/register.html'
