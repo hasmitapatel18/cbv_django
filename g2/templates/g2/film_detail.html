@@ -1,0 +1,38 @@
+<h1>{{ film.film_title }}</h1>
+<br></br>
+<p>Year: {{ film.year }}</p>
+<p>Genre: {{ film.genre }}</p>
+<p>Summary: {{ film.summary }} </p>
+
+<br><br>
+<br><br>
+
+<!-- <form action="" method="POST">
+  {% csrf_token %}
+  {% for field in form %}
+    <label>{{field.label_tag}}</label>
+    <div>{{ field }}</div>
+    <br></br>
+  {% endfor %}
+  <button class="btn " type="submit">Submit</button>
+
+
+</form> -->
+<form method="POST" class="col s12">{% csrf_token %}
+  {{ form.as_p }}
+  <!-- <p><label style="font-size:17px" for="id_content">Leave a comment</label> -->
+  <button class="btn " type="submit" background-color= "yellow">Submit</button>
+</form>
+<br></br>
+
+
+<h1>Comments</h1>
+<br><br>
+<br><br>
+
+{% for ac in comment_list %}
+  {{ ac.content }}
+  {{ ac.timestamp }}
+  {{ ac.user }}
+  <br><br>
+{% endfor %}

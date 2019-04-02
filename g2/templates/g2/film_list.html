@@ -1,0 +1,13 @@
+<h1>Movies</h1>
+<ul>
+  {% for am in all_movies %}
+    <li><a href= "{% url 'film_detail' am.id %}">{{am.film_title}}</a></li>
+    <a href= "{% url 'film_delete' am.id %}">delete</a>
+    <a href= "{% url 'film_update' am.id %}">edit</a>
+    <br></br>
+  {% endfor %}
+
+  <br></br>
+  <a href="{% url 'film_create' %}">add film</a>
+
+</ul>
