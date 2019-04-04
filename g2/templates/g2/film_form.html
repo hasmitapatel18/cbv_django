@@ -1,3 +1,8 @@
+{% extends "g2/header.html" %}
+{% block content %}
+<a href="{% url 'film_list' %}" style="color:teal">&lt; Back</a>
+<br></br>
+<br></br>
 <form action="" method="POST">
   {% csrf_token %}
   {% for field in form %}
@@ -9,3 +14,5 @@
 
 
 </form>
+
+{% endblock %}

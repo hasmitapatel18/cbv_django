@@ -44,10 +44,7 @@ class Comment(models.Model):
         return self.content
 
     def __str__(self):
-        return self.post
-
-    def __str__(self):
-        return self.content
+        return self.film_comment
 
     def get_queryset(self):
         return Comment.objects.all()

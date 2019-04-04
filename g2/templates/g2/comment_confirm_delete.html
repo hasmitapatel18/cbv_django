@@ -4,8 +4,8 @@
 <br></br>
 <br></br>
 <br></br>
-<form method="post">{% csrf_token %}
-    <p>Are you sure you want to delete {{film.film_title}}?</p>
+<form  method="post">{% csrf_token %}
+    <p>Are you sure you want to your comment "{{object.content}}", posted on {{object.timestamp}}?</p>
     <input type="submit" value="Yes">
 </form>
 

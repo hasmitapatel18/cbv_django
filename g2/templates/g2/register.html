@@ -1,5 +1,8 @@
 
 {% extends "g2/header.html" %}
+<a href="{% url 'film_list' %}" style="color:teal">&lt; Back</a>
+<br></br>
+
 
 {% block content %}
 
@@ -9,6 +12,6 @@
     <button class="btn" type="submit">Register</button>
   </form>
 
-  If you already have an account, <a href="/login"><strong>login</strong></a> instead
+
 
 {% endblock %}

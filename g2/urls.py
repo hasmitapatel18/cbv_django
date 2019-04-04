@@ -18,6 +18,9 @@ urlpatterns = [
 
     path('register/', views.RegisterView.as_view(), name='register'),
 
+    path('film_detail/<int:pk>/comment/<int:comment_id>', views.CommentDeleteView.as_view(), name='comment_delete'),
+
+
 
 
 
