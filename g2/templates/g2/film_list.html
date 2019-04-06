@@ -2,26 +2,39 @@
 
 {% block content %}
 
+<div class="row">
 
-<h1>Movies</h1>
-<ul>
   {% for am in all_movies %}
+  <div class="col s6 m5">
+       <div class="card">
+         <div class="card-image">
 
-    <div>
+         </div>
 
-    <li><a href= "{% url 'film_detail' am.id %}">{{am.film_title}}</a></li>
-    {% if user.is_staff %}
-      <a href= "{% url 'film_update' am.id %}" class="small material-icons">edit</a>
-      <a href= "{% url 'film_delete' am.id %}" class="small material-icons">delete</a>
-    {% endif %}
-    </div>
+          <div class="card-content">
+             <span class="card-title"><b>{{am.film_title}}</b></span>
+             <p>Year Released: {{am.year}}</p>
+             <p>Genre: {{am.genre}}</p>
+          </div>
 
-    <br></br>
-  {% endfor %}
+          <div class="card-action">
+             <a href=" {% url 'film_detail' am.id %} " style="color:teal">More</a>
+             <br></br>
+             {% if user.is_staff %}
+               <a href= "{% url 'film_update' am.id %}"<i class=" material-icons small cyan-text">edit</i></a>
+               <a href= "{% url 'film_delete' am.id %}"<i class=" material-icons small cyan-text">delete</i></a>
+             {% endif %}
+          </div>
+        </div>
+      </div>
+             <br></br>
+             <br></br>
+          {% endfor %}
 
-  <br></br>
+</div>
 
 
-</ul>
+
+
 
 {% endblock %}

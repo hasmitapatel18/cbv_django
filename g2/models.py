@@ -50,4 +50,11 @@ class Comment(models.Model):
         return Comment.objects.all()
 
     class Meta:
-        ordering = ('timestamp',)
+        ordering = ('-timestamp',)
+
+
+
+
+class Photo(models.Model):
+    photo_film=models.ForeignKey(Film, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to = 'media/', blank=True, null=True)

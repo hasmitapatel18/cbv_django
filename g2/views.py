@@ -60,7 +60,9 @@ class FilmDetailView(FormMixin, DetailView):
 
 class FilmCreateView(CreateView):
     model=Film
-    fields=['film_title', 'year', 'genre', 'summary']
+    fields=['film_title', 'year', 'genre', 'summary', ]
+
+
 
 
 class FilmUpdateView(UpdateView):
@@ -80,12 +82,10 @@ class CommentDeleteView(DeleteView):
     pk_url_kwarg = "comment_id"
 
     def delete(self, request, **kwargs):
-        pk_url_kwarg = "comment_id"
-
         self.object = self.get_object()
-
         self.object.delete()
-        return redirect('/')
+        film_id = kwargs["pk"]
+        return redirect(reverse('film_detail', kwargs={'pk': film_id}))
 
 
 
