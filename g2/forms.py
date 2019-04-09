@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import *
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, inlineformset_factory
 
 class FilmForm(forms.ModelForm):
     class Meta:
@@ -19,3 +19,6 @@ class PhotoForm(forms.ModelForm):
     class Meta:
         model = Photo
         fields = ('image', )
+
+
+PhotoFormSet=inlineformset_factory(Film, Photo, fields=( 'image',), extra=1, can_delete = False)

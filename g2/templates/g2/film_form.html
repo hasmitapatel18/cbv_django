@@ -3,13 +3,13 @@
 <a href="{% url 'film_list' %}" style="color:teal">&lt; Back</a>
 <br></br>
 <br></br>
-<form action="" method="POST">
+<form action="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
-  {% for field in form %}
-    <label>{{field.label_tag}}</label>
-    <div>{{ field }}</div>
-    <br></br>
-  {% endfor %}
+
+  {{ form.as_p }}
+  {{ photo_form.as_p}}
+
+
   <button class="btn " type="submit">Submit</button>
 
 

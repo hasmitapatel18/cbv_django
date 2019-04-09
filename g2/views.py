@@ -20,6 +20,13 @@ from django.contrib.auth import login, logout, authenticate
 
 from django.contrib import messages
 
+from django.forms import inlineformset_factory
+
+from django.http import HttpResponse, HttpResponseRedirect
+
+from django.db import transaction
+
+
 
 
 
@@ -30,9 +37,19 @@ from django.contrib import messages
 class FilmListView(ListView):
     template_name = 'g2/film_list.html'
     context_object_name='all_movies'
+    model=Film
+
 
     def get_queryset(self):
         return Film.objects.all()
+
+
+    def get_context_data(self, **kwargs):
+        context = super(FilmListView, self).get_context_data(**kwargs)
+        context['photo_list'] = Photo.objects.all().filter(photo_film=self.kwargs.get(id))
+        return context
+
+
 
 
 
@@ -59,8 +76,36 @@ class FilmDetailView(FormMixin, DetailView):
 
 
 class FilmCreateView(CreateView):
+    template_name = 'g2/film_form.html'
+    form_class = FilmForm
     model=Film
-    fields=['film_title', 'year', 'genre', 'summary', ]
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        photo_form = PhotoFormSet()
+        return self.render_to_response(self.get_context_data(form=form, photo_form=photo_form))
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        photo_form = PhotoFormSet(self.request.POST, request.FILES)
+        if (form.is_valid() and photo_form.is_valid()):
+            return self.form_valid(form, photo_form)
+        else:
+            return self.form_invalid(form, photo_form)
+
+    def form_valid(self, form, photo_form):
+        self.object = form.save()
+        photo_form.instance = self.object
+        photo_form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, photo_form):
+        return self.render_to_response(self.get_context_data(form=form, photo_form=photo_form))
+
 
 
 
@@ -68,6 +113,41 @@ class FilmCreateView(CreateView):
 class FilmUpdateView(UpdateView):
     model=Film
     fields=['film_title', 'year', 'genre', 'summary']
+    context_object_name = 'pfilm'
+
+
+    def get(self, request, *args, **kwargs):
+
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        photo_form = PhotoFormSet(instance=self.object)
+        return self.render_to_response(self.get_context_data(form=form, photo_form=photo_form, ))
+
+    def post(self, request, *args, **kwargs):
+
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        photo_form = PhotoFormSet(self.request.POST, request.FILES, instance=self.object)
+        if form.is_valid() and photo_form.is_valid():
+            return self.form_valid(form, photo_form)
+        else:
+            return self.form_invalid(form, photo_form)
+
+    def form_valid(self, form, photo_form):
+
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        photo_form.instance = self.object
+        photo_form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, photo_form):
+        return self.render_to_response(self.get_context_data(form=form, photo_form=photo_form))
+
+
 
 
 class FilmDeleteView(DeleteView):
