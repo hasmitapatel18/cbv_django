@@ -3,25 +3,20 @@
 {% block content %}
 
 <div class="row">
+  {%for am in all_movies%}
+   <div class="col s6 m5">
+     <div class="card">
+       <div class="card-image">
 
-  {% for am in all_movies %}
-
-      <div class="col s6 m5">
-
-           <div class="card">
-             <div class="card-image">
-
-
-                 <img src="../../../media/media/god.jpg" width="150" height="200">
-
-             </div>
+          <img src="{{ am.photo.image.url }}" width="150" height="200">
 
 
-          <div class="card-content">
-             <span class="card-title"><b>{{am.film_title}}</b></span>
-             <p>Year Released: {{am.year}}</p>
-             <p>Genre: {{am.genre}}</p>
-          </div>
+       </div>
+       <div class="card-content">
+         <span class="card-title"><b>{{am.film_title}}</b></span>
+         <p>Year Released: {{am.year}}</p>
+         <p>Genre: {{am.genre}}</p>
+       </div>
 
           <div class="card-action">
              <a href=" {% url 'film_detail' am.id %} " style="color:teal">More</a>

@@ -21,4 +21,4 @@ class PhotoForm(forms.ModelForm):
         fields = ('image', )
 
 
-PhotoFormSet=inlineformset_factory(Film, Photo, fields=( 'image',), extra=0, can_delete = False)
+PhotoFormSet=inlineformset_factory(Film, Photo, fields=( 'image',), extra=1, max_num=1, can_delete = False)
