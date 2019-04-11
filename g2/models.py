@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.urls import reverse
 
+
 # Create your models here.
 
 
@@ -23,6 +24,7 @@ class Film(models.Model):
 
     class Meta:
         ordering=['film_title']
+        
 
     def get_queryset(self):
         return Film.objects.all()
@@ -56,5 +58,5 @@ class Comment(models.Model):
 
 
 class Photo(models.Model):
-    photo_film=models.ForeignKey(Film, on_delete=models.CASCADE)
+    photo_film=models.ForeignKey(Film, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to = 'media/', blank=True, null=True)

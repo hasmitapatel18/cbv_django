@@ -42,13 +42,16 @@ class FilmListView(ListView):
 
 
 
+
+
     def get_queryset(self):
         return Film.objects.all()
-    #
-    #
+
+
     # def get_context_data(self, **kwargs):
+    #     a=Film.objects.get(id=24)
     #     context = super(FilmListView, self).get_context_data(**kwargs)
-    #     context['photo_list'] = Photo.objects.all().filter(photo_film=self.kwargs['pk'])
+    #     context['photo_list'] = Photo.objects.all().filter(photo_film=a)
     #     return context
 
 
@@ -96,6 +99,9 @@ class FilmCreateView(CreateView):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+
+        film_genre = "Comedy"
+
         photo_form = PhotoFormSet(self.request.POST, request.FILES)
         if (form.is_valid() and photo_form.is_valid()):
             return self.form_valid(form, photo_form)
@@ -117,7 +123,7 @@ class FilmCreateView(CreateView):
 class FilmUpdateView(UpdateView):
     model=Film
     fields=['film_title', 'year', 'genre', 'summary']
-    
+
 
 
     def get(self, request, *args, **kwargs):
