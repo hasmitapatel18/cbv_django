@@ -13,7 +13,7 @@
       <div class="card-image">
 
       {% for image in am.images.all %}
-      <img src="http://localhost:8000/media/{{ image.image }}" width="150" height="200">
+      <img src="{{ am.image.url }}" width="150" height="200">
       {% endfor %}
 
       </div>

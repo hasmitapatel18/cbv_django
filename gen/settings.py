@@ -11,6 +11,16 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+
+cloudinary.config(
+  cloud_name = "dtadoffpu",
+  api_key = "257426891233343",
+  api_secret = "ZeNSz4E3LPLIcgvsrxzf1AhCmk8"
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,13 +42,14 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'g2',
+    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
 
 ]
 
@@ -132,7 +143,9 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'g2/static/g2/'),
+)
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'

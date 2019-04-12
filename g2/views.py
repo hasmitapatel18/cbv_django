@@ -26,6 +26,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.db import transaction
 
+from cloudinary.forms import cl_init_js_callbacks
+
+import cloudinary
+
+import cloudinary.uploader
+
+import cloudinary.api
+
 
 
 
@@ -39,24 +47,8 @@ class FilmListView(ListView):
     context_object_name='all_movies'
     model=Film
 
-
-
-
-
-
     def get_queryset(self):
         return Film.objects.all()
-
-
-    # def get_context_data(self, **kwargs):
-    #     a=Film.objects.get(id=24)
-    #     context = super(FilmListView, self).get_context_data(**kwargs)
-    #     context['photo_list'] = Photo.objects.all().filter(photo_film=a)
-    #     return context
-
-
-
-
 
 
 
@@ -83,6 +75,7 @@ class FilmDetailView(FormMixin, DetailView):
         return self.render_to_response(context=context)
 
 
+
 class FilmCreateView(CreateView):
     template_name = 'g2/film_form.html'
     form_class = FilmForm
@@ -99,11 +92,16 @@ class FilmCreateView(CreateView):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-
-        film_genre = "Comedy"
-
+        f =Film.objects.create(film_title=self.request.POST['film_title'], year=self.request.POST['year'], genre=self.request.POST['genre'], summary=self.request.POST['summary'])
+        f.save()
         photo_form = PhotoFormSet(self.request.POST, request.FILES)
-        if (form.is_valid() and photo_form.is_valid()):
+
+        if photo_form.is_valid():
+            temp_image = request.FILES['images-0-image']
+            cloudinary_response = cloudinary.uploader.upload(temp_image.file.read())
+            image_url = cloudinary_response['url']
+            pf=Photo.objects.create(image_u=image_url, photo_film_id=f.id)
+            pf.save()
             return self.form_valid(form, photo_form)
         else:
             return self.form_invalid(form, photo_form)
