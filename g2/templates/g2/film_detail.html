@@ -46,7 +46,7 @@
 
 
 
-  {% if user.is_authenticated and user == ac.user %}
+  {% if user.is_authenticated and user == ac.user  %}
     <a href= "{% url 'comment_delete' pk=ac.film_comment_id comment_id=ac.id  %}">&nbsp;&nbsp; delete</a>
   {% endif %}
   <br><br>

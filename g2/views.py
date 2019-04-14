@@ -39,6 +39,8 @@ import cloudinary.api
 
 
 
+
+
 # Create your views here.
 
 
@@ -75,7 +77,6 @@ class FilmDetailView(FormMixin, DetailView):
         return self.render_to_response(context=context)
 
 
-
 class FilmCreateView(CreateView):
     template_name = 'g2/film_form.html'
     form_class = FilmForm
@@ -87,6 +88,7 @@ class FilmCreateView(CreateView):
         form = self.get_form(form_class)
         photo_form = PhotoFormSet()
         return self.render_to_response(self.get_context_data(form=form, photo_form=photo_form))
+        print(form)
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -94,17 +96,18 @@ class FilmCreateView(CreateView):
         form = self.get_form(form_class)
         f =Film.objects.create(film_title=self.request.POST['film_title'], year=self.request.POST['year'], genre=self.request.POST['genre'], summary=self.request.POST['summary'])
         f.save()
-        photo_form = PhotoFormSet(self.request.POST, request.FILES)
 
-        if photo_form.is_valid():
+
+        if form.is_valid():
             temp_image = request.FILES['images-0-image']
             cloudinary_response = cloudinary.uploader.upload(temp_image.file.read())
             image_url = cloudinary_response['url']
             pf=Photo.objects.create(image_u=image_url, photo_film_id=f.id)
             pf.save()
-            return self.form_valid(form, photo_form)
+
+            return redirect(reverse('film_detail', kwargs={'pk': f.id}))
         else:
-            return self.form_invalid(form, photo_form)
+            return redirect(reverse('film_detail', kwargs={'pk': f.id}))
 
     def form_valid(self, form, photo_form):
         self.object = form.save()
@@ -114,6 +117,7 @@ class FilmCreateView(CreateView):
 
     def form_invalid(self, form, photo_form):
         return self.render_to_response(self.get_context_data(form=form, photo_form=photo_form))
+
 
 
 
@@ -132,16 +136,36 @@ class FilmUpdateView(UpdateView):
         photo_form = PhotoFormSet(instance=self.object)
         return self.render_to_response(self.get_context_data(form=form, photo_form=photo_form, ))
 
+
     def post(self, request, *args, **kwargs):
 
+# load film
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        photo_form = PhotoFormSet(self.request.POST, request.FILES, instance=self.object)
-        if form.is_valid() and photo_form.is_valid():
-            return self.form_valid(form, photo_form)
+
+# update film
+        form.save()
+
+# looking into dictionary (by using .get, n.b. this get is different to the queryset .get) with key 'images-0-image' and seeing associated value (ie user uploaded image). if there is no value, pass none.
+        if request.FILES != None:
+            temp_image = request.FILES.get('images-0-image', None)
+
+# update image if present
+        if temp_image != None:
+
+            cloudinary_response = cloudinary.uploader.upload(temp_image.file.read())
+            image_url = cloudinary_response['url']
+
+            pf=Photo.objects.filter(photo_film_id=self.kwargs['pk']).update(image_u=image_url)
+            
+# redirect to film_detail page
+            return redirect(reverse('film_list'))
         else:
-            return self.form_invalid(form, photo_form)
+            return redirect(reverse('film_list'))
+
+
+
 
     def form_valid(self, form, photo_form):
 

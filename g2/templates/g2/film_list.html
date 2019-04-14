@@ -12,9 +12,11 @@
     <div class="card">
       <div class="card-image">
 
-      {% for image in am.images.all %}
-      <img src="{{ am.image.url }}" width="150" height="200">
-      {% endfor %}
+        {% for image in am.images.all %}
+
+          <img src="{{ image.image_u }} " width="150" height="200">
+
+        {% endfor %}
 
       </div>
       <div class="card-content">
